@@ -63,9 +63,21 @@ if (($raw = @file_get_contents($fullPath)) === false) {
 
 libxml_use_internal_errors(TRUE);
 $rawHtml = str_get_html($raw);
-$contentHtml = $rawHtml->find('.root');
+$contentHtml = $rawHtml->find('.root')[0];
+$phpdom = new DOMDocument();
 
+// Create a new DOMElement using the simple_html_dom_node's outer HTML
+$newNode = $phpdom->createElement('div');
+$newNode->nodeValue = $contentHtml->outertext;
 
+// Import the new DOMElement into the DOMDocument
+$newNode = $phpdom->importNode($newNode, true);
+
+// Append the imported node to the DOMDocument
+$phpdom->appendChild($newNode);
+
+// Now you can use saveHTML
+$rawcontent = $phpdom->saveHTML();
 foreach($contentHtml->find('img') as $e){
     $src = $e->src;
     echo 'finded img '. $src.PHP_EOL;
