@@ -1,13 +1,18 @@
 <?php
 set_time_limit(0);
 include "simple_html_dom.php";
+include "functions" . DIRECTORY_SEPARATOR . "fetch.php";
+libxml_use_internal_errors(TRUE);
+
 $currentDir = __DIR__;
 
 // Переходим на уровень выше
-$parentDir = dirname($currentDir);
+    $parentDir = dirname($currentDir);
 
 // Добавляем "site" к пути
- $siteDir = $parentDir . DIRECTORY_SEPARATOR . 'site';
+    $siteDir = $parentDir . DIRECTORY_SEPARATOR . 'site';
+
+
 
 $paths = [
     "/",
@@ -51,97 +56,67 @@ $paths = [
     "/poker/poker-odds-calculator/"
 ];
 
-foreach($paths as $path) {
+foreach ($paths as $path) {
     echo 'begin process ' . $path . PHP_EOL;
-$fullPath = $siteDir. str_replace('/','\\',$path)."index.html";
-
-if (($raw = @file_get_contents($fullPath)) === false) {
-    $error = error_get_last();
-    echo "HTTP request failed. Error was: " . $error['message'].PHP_EOL;
-    continue;
-} 
-
-libxml_use_internal_errors(TRUE);
-$rawHtml = str_get_html($raw);
-$contentHtml = $rawHtml->find('.root')[0];
-$phpdom = new DOMDocument();
-
-// Create a new DOMElement using the simple_html_dom_node's outer HTML
-$newNode = $phpdom->createElement('div');
-$newNode->nodeValue = $contentHtml->outertext;
-
-// Import the new DOMElement into the DOMDocument
-$newNode = $phpdom->importNode($newNode, true);
-
-// Append the imported node to the DOMDocument
-$phpdom->appendChild($newNode);
-
-// Now you can use saveHTML
-$rawcontent = $phpdom->saveHTML();
-foreach($contentHtml->find('img') as $e){
-    $src = $e->src;
-    echo 'finded img '. $src.PHP_EOL;
-    if($src==""){
-        break;
+    $fullPath = $siteDir . str_replace('/', '\\', $path) . "index.html";
+    
+    if (($raw = @file_get_contents($fullPath)) === false) {
+        $error = error_get_last();
+        echo "HTTP request failed. Error was: " . $error['message'] . PHP_EOL;
+        continue;
     }
-    if(str_starts_with($src,'//')){
-        
-        $src = str_replace('//','https://',$src);
-    }
-    if(str_starts_with($src,'/')){
-        
-        $src = $path.$src;
-    }
-    if ($e->srcset) {
-        $e->removeAttribute('srcset');
-    }
-    $newsrc = saveImg($src);
-    $e->src = $newsrc;
+    
+    $contentNode = getContentNode($raw,'.root' );
 
-}
-
-foreach ($contentHtml->find('div') as $d) {
-    if (str_contains($d->style, "background-image:url('")) {
-        echo 'finded image in style tag ' . $d->style . PHP_EOL;
-        $src = explode("'", $d->style)[1];
-        if(filter_var($src, FILTER_VALIDATE_URL)){
+    foreach ($contentNode->find('img') as $e) {
+        $src = $e->src;
+        echo 'finded img ' . $src . PHP_EOL;
+        if ($src == "") {
+            break;
+        }
+        if (str_starts_with($src, '//')) {
+            
+            $src = str_replace('//', 'https://', $src);
+        }
+        if (str_starts_with($src, '/')) {
+            
+            $src = $path . $src;
+        }
+        if ($e->srcset) {
+            $e->removeAttribute('srcset');
+        }
         $newsrc = saveImg($src);
-        echo $newsrc . PHP_EOL;
-        $d->style = "background-image:url('" . $newsrc . "')";
-        } else { continue; }
+        $e->src = $newsrc;
+        
     }
-}
-
-$contentHtml->save('yo.html');
-$rendered_html = file_get_contents('yo.html');
-$final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>'.$rendered_html.'<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
-
+    
+    foreach ($contentNode->find('div') as $d) {
+        if (str_contains($d->style, "background-image:url('")) {
+            echo 'finded image in style tag ' . $d->style . PHP_EOL;
+            $src = explode("'", $d->style)[1];
+            if (filter_var($src, FILTER_VALIDATE_URL)) {
+                $newsrc = saveImg($src);
+                echo $newsrc . PHP_EOL;
+                $d->style = "background-image:url('" . $newsrc . "')";
+            } else {
+                continue;
+            }
+        }
+    }
+    
+    $contentNode->save('yo.html');
+    $rendered_html = file_get_contents('yo.html');
+    $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
+    
     $link = substr($path, 1);
-    $res_link=$link.'/';
-    echo $res_link.PHP_EOL;
-    if(!is_dir($res_link)) {
-    mkdir($res_link, 0777, true);
-}
-file_put_contents($res_link.'/index.php', $final_file_content);
-
-}
-
-
-
-function saveImg($src)
-{
-    global $siteDir;
-    $filename = pathinfo($src, PATHINFO_BASENAME);
-    if (str_contains($filename, '%')) {
-        $filename = str_replace('%', '_', $filename);
+    $res_link = $link . '/';
+    echo $res_link . PHP_EOL;
+    if (!is_dir($res_link)) {
+        mkdir($res_link, 0777, true);
     }
-    // if (in_array($filename, $all_filenames)) {
-    //     $filename = uniqid() . $filename;
-    // };
-
-    $realpath = $siteDir."\\img\\$filename";
-    $urlPath = "img/$filename";
-
-    file_put_contents($realpath, file_get_contents($src));
-    return $urlPath;
+    file_put_contents($res_link . '/index.php', $final_file_content);
+    
 }
+
+
+
