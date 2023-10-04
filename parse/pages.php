@@ -3,7 +3,7 @@ set_time_limit(0);
 include "simple_html_dom.php";
 include "functions" . DIRECTORY_SEPARATOR . "fetch.php";
 libxml_use_internal_errors(TRUE);
-
+const DOMAIN = 'https://www.888poker.com';
 $currentDir = __DIR__;
 
 // Переходим на уровень выше
@@ -80,7 +80,7 @@ foreach ($paths as $path) {
         }
         if (str_starts_with($src, '/')) {
             
-            $src = $path . $src;
+            $src = DOMAIN . $src;
         }
         if ($e->srcset) {
             $e->removeAttribute('srcset');
@@ -114,7 +114,7 @@ foreach ($paths as $path) {
     if (!is_dir($res_link)) {
         mkdir($res_link, 0777, true);
     }
-    file_put_contents($res_link . '/index.php', $final_file_content);
+    file_put_contents($res_link . 'index.php', $final_file_content);
     
 }
 

@@ -16,25 +16,29 @@ function saveImg($src)
     $realpath = $siteDir . "\\img\\$filename";
     $urlPath = "img/$filename";
     
-    file_put_contents($realpath, file_get_contents($src));
+    $options = array(
+        'http' => array(
+            'method' => "GET",
+            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n",
+        ),
+    );
+    
+    $context = stream_context_create($options);
+
+    file_put_contents($realpath, file_get_contents($src, false, $context));
     return $urlPath;
 }
 
+
 function getContentNode(string $html, string $node): simple_html_dom
 {
-    $initialDoc = str_get_html($html);
-    $contentNode = $initialDoc->find($node)[0];
-    
     $phpdom = new DOMDocument();
+    $phpdom->loadHTML($html);
+    $content = $phpdom->getElementById($node);
+    $rawcontent =  $phpdom->saveHTML($content);
+    return  str_get_html($rawcontent);
+   
+
     
-    $newNode = $phpdom->createElement('div');
-    $newNode->nodeValue = $contentNode->outertext;
-    
-    $newNode = $phpdom->importNode($newNode, true);
-    
-    $phpdom->appendChild($newNode);
-    
-   $сука  = $phpdom->saveHTML();
-    return str_get_html($сука);
 //        return $contentNode;
 }
