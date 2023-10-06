@@ -7,53 +7,53 @@ const DOMAIN = 'https://www.888poker.com';
 $currentDir = __DIR__;
 
 // Переходим на уровень выше
-    $parentDir = dirname($currentDir);
+$parentDir = dirname($currentDir);
 
 // Добавляем "site" к пути
-    $sourceSiteDir = $parentDir . DIRECTORY_SEPARATOR . 'site';
+$sourceSiteDir = $parentDir . DIRECTORY_SEPARATOR . 'site';
 
-    $readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . 'ready';
+$readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . 'ready';
 
 
 $paths = [
     // "/",
-     "/how-to-play-poker/",
-     "/how-to-play-poker/strategy/",
-     "/how-to-play-poker/rules/",
-     "/poker-software/",
-     "/platforms/",
-     "/poker-software/limits-and-rake/",
-     "/poker-games/",
-     "/poker-games/texas-holdem/",
-     "/poker-games/omaha/",
-     "/poker-games/omaha-hi-lo/",
-     "/poker-games/blast-game/",
-     "/poker-games/snap/",
-     "/poker-promotions/",
-     "/poker-promotions/bonus/",
-     "/poker-promotions/bonus/no-deposit-8/",
-     "/poker-promotions/24-7-freerolls-festival/",
-     "/poker-promotions/invite-a-friend/iaf/",
-     "/888poker-club/",
-     "/real-money-poker/deposit/",
-     "/real-money-poker/",
-     "/real-money-poker/deposit/",
-     "/real-money-poker/cashout/",
-     "/real-money-poker/deposit/payment-methods/",
-     "/real-money-poker/deposit/limits/",
-     "/real-money-poker/deposit/money-transfer/",
-     "/poker-tournaments/",
-     "/poker-tournaments/types/",
-     "/poker-tournaments/types/multi-table-tournament/",
-     "/poker-games/pko/",
-     "/poker-tournaments/mystery-bounty/",
-     "/888live-events/",
-     "/the-team/",
-     "/magazine/strategy",
-     "/magazine/poker-world",
-     "/magazine/888news",
-     "/poker/poker-odds-calculator/",
-     "/poker-promotions/bonus/",
+    "/how-to-play-poker/",
+    "/how-to-play-poker/strategy/",
+    "/how-to-play-poker/rules/",
+    "/poker-software/",
+    "/platforms/",
+    "/poker-software/limits-and-rake/",
+    "/poker-games/",
+    "/poker-games/texas-holdem/",
+    "/poker-games/omaha/",
+    "/poker-games/omaha-hi-lo/",
+    "/poker-games/blast-game/",
+    "/poker-games/snap/",
+    "/poker-promotions/",
+    "/poker-promotions/bonus/",
+    "/poker-promotions/bonus/no-deposit-8/",
+    "/poker-promotions/24-7-freerolls-festival/",
+    "/poker-promotions/invite-a-friend/iaf/",
+    "/888poker-club/",
+    "/real-money-poker/deposit/",
+    "/real-money-poker/",
+    "/real-money-poker/deposit/",
+    "/real-money-poker/cashout/",
+    "/real-money-poker/deposit/payment-methods/",
+    "/real-money-poker/deposit/limits/",
+    "/real-money-poker/deposit/money-transfer/",
+    "/poker-tournaments/",
+    "/poker-tournaments/types/",
+    "/poker-tournaments/types/multi-table-tournament/",
+    "/poker-games/pko/",
+    "/poker-tournaments/mystery-bounty/",
+    "/888live-events/",
+    "/the-team/",
+    "/magazine/strategy",
+    "/magazine/poker-world",
+    "/magazine/888news",
+    "/poker/poker-odds-calculator/",
+    "/poker-promotions/bonus/",
     "/poker-promotions/card-strike/",
     "/888live-events/coventry-oct-2023/",
     "/poker-promotions/snowmen-festival/",
@@ -503,87 +503,106 @@ $context = stream_context_create($options);
 foreach ($paths as $path) {
     echo 'begin process ' . $path . PHP_EOL;
     // $fullPath = $sourceSiteDir . str_replace('/', '\\', $path) . "index.html";
-     $fullPath = DOMAIN . $path;
-    
+    $fullPath = DOMAIN . $path;
+
     if (($raw = @file_get_contents($fullPath, false, $context)) === false) {
         $error = error_get_last();
         echo "HTTP request failed. Error was: " . $error['message'] . PHP_EOL;
         continue;
     }
-    
+
     $page = getFullPage($raw);
-    
-        foreach($page->find('title') as $e) {
-            $titles[$path] = $e->innertext;
-            echo $e->innertext.PHP_EOL;
-        }
-    
-         foreach($page->find('meta[name=description]') as $e) {
-             $descriptions[$path] = $e->content;
-             echo $e->content.PHP_EOL;
-         }
-         
-    $contentNode = getContentNode($raw,'.root' );
+
+    foreach ($page->find('title') as $e) {
+        $titles[$path] = $e->innertext;
+        echo $e->innertext . PHP_EOL;
+    }
+
+    foreach ($page->find('meta[name=description]') as $e) {
+        $descriptions[$path] = $e->content;
+        echo $e->content . PHP_EOL;
+    }
+
+    $contentNode = getContentNode($raw, '.root');
 
     if ($contentNode) {
 
-    foreach ($contentNode->find('img') as $e) {
-        $src = $e->src;
-        echo 'finded img ' . $src . PHP_EOL;
-        if ($src == "") {
-            break;
+        foreach ($contentNode->find('*') as $e) {
+
+            if (isset($e->src)) {
+                $src = $e->src;
+                if ($src == "") {
+                    continue;
+                }
+                if (str_starts_with($src, '/')) {
+
+                    $src = DOMAIN . $src;
+                }
+                if ($e->srcset) {
+                    $e->removeAttribute('srcset');
+                }
+                $newsrc = saveAsset($src);
+                $e->src = $newsrc;
+            }
         }
-        if (str_starts_with($src, '//')) {
-            
-            $src = str_replace('//', 'https://', $src);
-        }
-        if (str_starts_with($src, '/')) {
-            
-            $src = DOMAIN . $src;
-        }
-        if ($e->srcset) {
-            $e->removeAttribute('srcset');
-        }
-        $newsrc = saveImg($src);
-        $e->src = $newsrc;
-        
-    }
-    
+
+
+        // foreach ($contentNode->find('img') as $e) {
+        //     $src = $e->src;
+        //     echo 'finded img ' . $src . PHP_EOL;
+        //     if ($src == "") {
+        //         break;
+        //     }
+        //     if (str_starts_with($src, '//')) {
+
+        //         $src = str_replace('//', 'https://', $src);
+        //     }
+        //     if (str_starts_with($src, '/')) {
+
+        //         $src = DOMAIN . $src;
+        //     }
+        //     if ($e->srcset) {
+        //         $e->removeAttribute('srcset');
+        //     }
+        //     $newsrc = saveImg($src);
+        //     $e->src = $newsrc;
+
+        // }
+
         foreach ($contentNode->find('source') as $s) {
-                $s->outertext = '';
+            $s->outertext = '';
         }
-    
-    foreach ($contentNode->find('div') as $d) {
-        if (str_contains($d->style, "background-image:url('")) {
-            echo 'finded image in style tag ' . $d->style . PHP_EOL;
-            $src = explode("'", $d->style)[1];
-                $newsrc = saveImg($src);
+        foreach ($contentNode->find('iframe') as $s) {
+            $s->outertext = '';
+        }
+
+        foreach ($contentNode->find('div') as $d) {
+            if (str_contains($d->style, "background-image:url('")) {
+                echo 'finded image in style tag ' . $d->style . PHP_EOL;
+                $src = explode("'", $d->style)[1];
+                $newsrc = saveAsset($src);
                 echo $newsrc . PHP_EOL;
                 $d->style = "background-image:url('" . $newsrc . "')";
-
+            }
         }
-    }
         foreach ($contentNode->find('a') as $link) {
             $internalLinks[] = $link->href;
         }
-    $contentNode->save('yo.html');
-    $rendered_html = file_get_contents('yo.html');
-    $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
-    
-  
-    $res_link = $readySiteFiles.str_replace('/', '\\', $path);
-    echo $res_link . PHP_EOL;
-    if (!is_dir($res_link)) {
-        mkdir($res_link, 0777, true);
+        $contentNode->save('yo.html');
+        $rendered_html = file_get_contents('yo.html');
+        $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
+
+
+        $res_link = $readySiteFiles . str_replace('/', '\\', $path);
+        echo $res_link . PHP_EOL;
+        if (!is_dir($res_link)) {
+            mkdir($res_link, 0777, true);
+        }
+        file_put_contents($res_link . 'index.php', $final_file_content);
+    } else {
+        continue;
     }
-    file_put_contents( $res_link .'index.php' , $final_file_content);
-} else {
-    continue;
 }
-}
-file_put_contents('internal_links.json',json_encode($internalLinks, JSON_UNESCAPED_UNICODE));
-file_put_contents('titles.json', json_encode($titles, JSON_UNESCAPED_UNICODE));
-file_put_contents('descriptions.json', json_encode($descriptions, JSON_UNESCAPED_UNICODE));
-
-
-
+// file_put_contents('internal_links.json', json_encode($internalLinks, JSON_UNESCAPED_UNICODE));
+// file_put_contents('titles.json', json_encode($titles, JSON_UNESCAPED_UNICODE));
+// file_put_contents('descriptions.json', json_encode($descriptions, JSON_UNESCAPED_UNICODE));
