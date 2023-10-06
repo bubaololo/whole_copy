@@ -1,9 +1,10 @@
 <?php
 
 include "simple_html_dom.php";
-$rawcontent = file_get_contents('footer.php');
+include "functions" . DIRECTORY_SEPARATOR . "fetch.php";
+$rawcontent = file_get_contents('header.html');
 $html = str_get_html($rawcontent);
-$url='https://play.pokerok900.com/';
+$url='https://www.888poker.com';
 foreach($html->find('img') as $e) {
     $src = $e->src;
     if (str_contains($src, 'yandex')) {
@@ -18,16 +19,12 @@ foreach($html->find('img') as $e) {
 
         $src = $url.$src;
     }
-
-    $all_filenames = scandir('img');
     $filename = pathinfo($src, PATHINFO_BASENAME);
-    if(in_array($filename, $all_filenames)) {
-        $filename=uniqid().$filename;
-    };
 
-    $newpath = "img\\$filename";
+    $newpath = saveImg($src);
     $e->src = $newpath;
-    file_put_contents($newpath, file_get_contents($src));
+    $realpath = $sourceSiteDir . "\\img\\$filename";
+    file_put_contents($realpath, file_get_contents($src));
 
     echo $src.PHP_EOL;
     // echo "<br>";
