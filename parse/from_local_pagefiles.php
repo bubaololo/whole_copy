@@ -16,7 +16,7 @@ $readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . 'ready';
 
 
 $paths = [
-    // "/",
+    "/",
     "/how-to-play-poker/",
     "/how-to-play-poker/strategy/",
     "/how-to-play-poker/rules/",
