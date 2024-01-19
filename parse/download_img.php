@@ -41,8 +41,8 @@ if(in_array($filename,$all_filenames)){
     echo $newpath.PHP_EOL;
     // echo "<br>";
 }
-$html->save('yo.html');
-$rendered_html = file_get_contents('yo.html');
+$html->save('temp.html');
+$rendered_html = file_get_contents('temp.html');
 $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>'.$rendered_html.'<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
 file_put_contents('index.php',$final_file_content);
 

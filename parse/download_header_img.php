@@ -29,7 +29,7 @@ foreach($html->find('img') as $e) {
     echo $src.PHP_EOL;
     // echo "<br>";
 }
-$html->save('yo.html');
-// $rendered_html = file_get_contents('yo.html');
+$html->save('temp.html');
+// $rendered_html = file_get_contents('temp.html');
 
 // file_put_contents('index1.php',$final_file_content);

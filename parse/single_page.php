@@ -106,8 +106,8 @@ foreach ($contentNode->find('div') as $d) {
 foreach ($contentNode->find('a') as $link) {
     $internalLinks[] = $link->href;
 }
-$contentNode->save('yo.html');
-$rendered_html = file_get_contents('yo.html');
+$contentNode->save('temp.html');
+$rendered_html = file_get_contents('temp.html');
 $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
 
 

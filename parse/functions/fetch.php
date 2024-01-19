@@ -31,7 +31,7 @@ function saveImg($src)
 function getContentNode(string $html, string $node): simple_html_dom | null
 {
     $initialHtml = str_get_html($html);
-    $content = $initialHtml->find($node)[0];
+    $content = $initialHtml->find($node);
     if ($content) {
         $contentStr = $content->save();
         $rawcontent =  str_get_html($contentStr);
@@ -42,7 +42,8 @@ function getContentNode(string $html, string $node): simple_html_dom | null
 }
 function getFullPage(string $html): simple_html_dom
 {
-    return  str_get_html($html);
+    $dom = str_get_html($html);
+    return $dom;
 }
 
 
@@ -64,8 +65,6 @@ function saveAsset($src)
     global $readySiteFiles;
 
     $src = removeParams($src);
-
-
 
     $filename = pathinfo($src, PATHINFO_BASENAME);
     if (str_contains($filename, '%')) {
