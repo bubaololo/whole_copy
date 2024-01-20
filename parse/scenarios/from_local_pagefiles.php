@@ -5,15 +5,17 @@ include "simple_html_dom.php";
 include "functions" . DIRECTORY_SEPARATOR . "fetch.php";
 libxml_use_internal_errors(TRUE);
 const DOMAIN = 'https://wptglobal.com';
+const LOCAL_SOURCES_DIR = 'local_sources';
+const READY_FILES_DIR = 'ready';
 $currentDir = __DIR__;
 
 // Переходим на уровень выше
 $parentDir = dirname($currentDir);
 
-// Добавляем "site" к пути
-$sourceSiteDir = $parentDir . DIRECTORY_SEPARATOR . 'site';
 
-$readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . 'ready';
+$sourceSiteDir = $parentDir . DIRECTORY_SEPARATOR . LOCAL_SOURCES_DIR;
+
+$readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . READY_FILES_DIR;
 
 
 $paths = [

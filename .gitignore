@@ -1,5 +1,5 @@
-site/
-ready/
+local/*
+ready/*
 styles.css
 titles.json
 temp.html
@@ -7,6 +7,7 @@ internal_links.json
 links.json
 header.html
 parse/temp.html
+parse/temp_files/*
 parse/css/
 parse/css.json
 parse/descriptions.json
