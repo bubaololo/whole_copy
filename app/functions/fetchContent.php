@@ -4,14 +4,13 @@
 
 function saveImg($src)
 {
-    global $sourceSiteDir;
-    global $readySiteFiles;
+
     $filename = pathinfo($src, PATHINFO_BASENAME);
     if (str_contains($filename, '%')) {
         $filename = str_replace('%', '_', $filename);
     }
     
-    $realpath = $readySiteFiles . "\\assets\\$filename";
+    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . "assets" .DIRECTORY_SEPARATOR .$filename;
     $urlPath = "/assets/$filename";
     echo $urlPath . PHP_EOL;
     $options = array(
@@ -40,6 +39,7 @@ function getContentNode(string $html, string $node): simple_html_dom | null
         return null;
     }
 }
+
 function getFullPage(string $html): simple_html_dom
 {
     $dom = str_get_html($html);
@@ -56,13 +56,8 @@ function removeParams(string $str): string
     return $str;
 }
 
-
-
-
 function saveAsset($src)
 {
-    global $sourceSiteDir;
-    global $readySiteFiles;
 
     $src = removeParams($src);
 
@@ -70,23 +65,13 @@ function saveAsset($src)
     if (str_contains($filename, '%')) {
         $filename = str_replace('%', '_', $filename);
     }
-    // if (in_array($filename, $all_filenames)) {
-    //     $filename = uniqid() . $filename;
-    // };
 
-    $realpath = $readySiteFiles . "\\assets\\$filename";
+    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . 'assets'.DIRECTORY_SEPARATOR . $filename;
     $urlPath = "/assets/$filename";
     echo $urlPath . PHP_EOL;
-    $options = array(
-        'http' => array(
-            'method' => "GET",
-            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n",
-        ),
-    );
 
-    $context = stream_context_create($options);
 
-    file_put_contents($realpath, @file_get_contents($src, false, $context));
+    file_put_contents($realpath, getHttpContent($src));
     return $urlPath;
 }
 
@@ -123,4 +108,58 @@ function saveImgFromCss($src)
 function processCssImgs($cssContent)
 {
     return preg_replace_callback("/(?<=url\()[^)]*/", 'saveImgFromCss', $cssContent);
+}
+
+function normalizeSrcUrl(string $src): string
+{
+    
+    if ($src == "") {
+        exit;
+    }
+    if (str_starts_with($src, '//')) {
+
+       $src =  str_replace('//','https://', $src);
+    }
+    if (str_starts_with($src, '/')) {
+
+        $src = DOMAIN . $src;
+    }
+    return $src;
+}
+
+
+function processPageContent(simple_html_dom $dom): simple_html_dom
+{
+    // universal assets collector
+    foreach ($dom->find('*') as $e) {
+
+        if(isset($e->src)) {
+            $src = normalizeSrcUrl($e->src);
+
+            if ($e->srcset) {
+                $e->removeAttribute('srcset');
+            }
+
+            $newsrc = saveAsset($src);
+            $e->src = $newsrc;
+        }
+    
+    }
+    foreach ($dom->find('source') as $s) {
+        $s->outertext = '';
+    }
+    foreach ($dom->find('div') as $d) {
+        if (str_contains($d->style, "background-image:url('")) {
+            echo 'finded image in style tag ' . $d->style . PHP_EOL;
+            $src = explode("'", $d->style)[1];
+            $newsrc = saveAsset($src);
+            echo $newsrc . PHP_EOL;
+            $d->style = "background-image:url('" . $newsrc . "')";
+    
+        }
+    }
+    foreach ($dom->find('a') as $link) {
+        $internalLinks[] = $link->href;
+    }
+    return $dom;
 }

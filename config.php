@@ -2,6 +2,7 @@
 return [
     'paths' => [
         'app_files' => 'app',
-        'site_files' => 'site',
+        'site_files' => 'files',
     ],
+    'domain' => ''
 ];

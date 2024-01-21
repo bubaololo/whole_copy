@@ -4,14 +4,15 @@ require_once '../../bootstrap.php';
 
 
 
-$path = '/';
+$path = '';
 echo 'begin process ' . $path . PHP_EOL;
 // $fullPath = DOMAIN . $path;
-$fullPath = getFilesPath($path);
+$fullPath = getFilesPath('local') . DIRECTORY_SEPARATOR . 'index.html';
+$rawHtml = file_get_contents($fullPath);
 
 
 
-$page = getFullPage($fullPath);
+$page = getFullPage($rawHtml);
 
 foreach($page->find('title') as $e) {
     $titles[$path] = $e->innertext;
@@ -23,33 +24,11 @@ foreach($page->find('meta[name=description]') as $e) {
     echo $e->content . PHP_EOL;
 }
 
-$contentNode = getFullPage($raw);
 
-foreach ($contentNode->find('*') as $e) {
+$readyPageContent =  processPageContent($page);
 
-    if(isset($e->src)) {
-        $src = $e->src;
-        if ($src == "") {
-            continue;
-        }
-        if (str_starts_with($src, '/')) {
 
-            $src = DOMAIN . $src;
-        }
-        if (str_starts_with($src, '/')) {
-
-            $src = DOMAIN . $src;
-        }
-        if ($e->srcset) {
-            $e->removeAttribute('srcset');
-        }
-        $newsrc = saveAsset($src);
-        $e->src = $newsrc;
-    }
-
-}
-
-// foreach ($contentNode->find('img') as $e) {
+// foreach ($page->find('img') as $e) {
 //     $src = $e->src;
 //     echo 'finded img ' . $src . PHP_EOL;
 //     if ($src == "") {
@@ -71,24 +50,9 @@ foreach ($contentNode->find('*') as $e) {
 
 // }
 
-foreach ($contentNode->find('source') as $s) {
-    $s->outertext = '';
-}
 
-foreach ($contentNode->find('div') as $d) {
-    if (str_contains($d->style, "background-image:url('")) {
-        echo 'finded image in style tag ' . $d->style . PHP_EOL;
-        $src = explode("'", $d->style)[1];
-        $newsrc = saveAsset($src);
-        echo $newsrc . PHP_EOL;
-        $d->style = "background-image:url('" . $newsrc . "')";
 
-    }
-}
-foreach ($contentNode->find('a') as $link) {
-    $internalLinks[] = $link->href;
-}
-$contentNode->save('temp.html');
+$page->save('temp.html');
 $rendered_html = file_get_contents('temp.html');
 $final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
 
