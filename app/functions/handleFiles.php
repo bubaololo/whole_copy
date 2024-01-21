@@ -16,8 +16,11 @@ function getHttpContent(string $url, int $maxRetries = 3)
     $context = stream_context_create($options);
     
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
-        throw new InvalidArgumentException("Invalid URL: $url");
+        // throw new InvalidArgumentException("Invalid URL: $url");
         // return false;
+        error_log("Incorrect src $url");
+        echo "Incorrect src $url";
+        return null;
     }
     $startTime = microtime(true); // Record start time
     $retryCount = 0;

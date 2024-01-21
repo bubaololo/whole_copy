@@ -9,8 +9,8 @@ echo 'begin process ' . $path . PHP_EOL;
 // $fullPath = DOMAIN . $path;
 $fullPath = getFilesPath('local') . DIRECTORY_SEPARATOR . 'index.html';
 $rawHtml = file_get_contents($fullPath);
-
-
+// $rawHtml = html_entity_decode($rawHtml);
+// file_put_contents('test.html', $rawHtml);
 
 $page = getFullPage($rawHtml);
 
@@ -53,16 +53,4 @@ $readyPageContent =  processPageContent($page);
 
 
 $page->save('temp.html');
-$rendered_html = file_get_contents('temp.html');
-$final_file_content = '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/header.php"); ?>' . $rendered_html . '<?php include_once ($_SERVER["DOCUMENT_ROOT"]."/footer.php"); ?>';
 
-
-$res_link = $readySiteFiles . str_replace('/', '\\', $path);
-echo $res_link . PHP_EOL;
-if (!is_dir($res_link)) {
-    mkdir($res_link, 0777, true);
-}
-file_put_contents('index.php', $rendered_html);
-
-
-file_put_contents('internal_links.json', json_encode($internalLinks, JSON_UNESCAPED_UNICODE));

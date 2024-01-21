@@ -7,7 +7,7 @@ $appPath = getAppPath();
 require_once getAppPath('functions').DIRECTORY_SEPARATOR . "fetchContent.php";
 require_once getAppPath('functions').DIRECTORY_SEPARATOR . "handleFiles.php";
 require_once getAppPath('functions' . DIRECTORY_SEPARATOR . 'simplehtmldom_1_9_1').DIRECTORY_SEPARATOR . "simple_html_dom.php";
-const DOMAIN = 'https://wptglobal.com/';
+const DOMAIN = 'https://wptglobal.com';
 libxml_use_internal_errors(true);
 
 function getFilesPath($folder = ''): string

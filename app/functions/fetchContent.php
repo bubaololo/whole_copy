@@ -77,8 +77,6 @@ function saveAsset($src)
 
 function saveImgFromCss($src)
 {
-    global $sourceSiteDir;
-    global $readySiteFiles;
     $src = $src[0];
     $src = removeParams($src);
 
@@ -89,19 +87,12 @@ function saveImgFromCss($src)
     }
 
 
-    $realpath = $readySiteFiles . "\\assets\\$filename";
     $urlPath = "/assets/$filename";
     echo $urlPath . PHP_EOL;
-    $options = array(
-        'http' => array(
-            'method' => "GET",
-            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n",
-        ),
-    );
 
-    $context = stream_context_create($options);
+
     $fileUrl = DOMAIN . '/' . $src;
-    file_put_contents($realpath, @file_get_contents($fileUrl, false, $context));
+    $urlPath = saveAsset($fileUrl);
     return $urlPath;
 }
 
@@ -110,8 +101,11 @@ function processCssImgs($cssContent)
     return preg_replace_callback("/(?<=url\()[^)]*/", 'saveImgFromCss', $cssContent);
 }
 
+
+
 function normalizeSrcUrl(string $src): string
 {
+
     
     if ($src == "") {
         exit;
@@ -145,14 +139,28 @@ function processPageContent(simple_html_dom $dom): simple_html_dom
         }
     
     }
+    foreach ($dom->find('link') as $link) {
+
+        if(isset($link->href)) {
+            $src = normalizeSrcUrl($link->href);
+
+            $newsrc = saveAsset($src);
+            $link->href = $newsrc;
+        }
+    
+    }
     foreach ($dom->find('source') as $s) {
         $s->outertext = '';
     }
     foreach ($dom->find('div') as $d) {
-        if (str_contains($d->style, "background-image:url('")) {
+
+        if (str_contains($d->style, "background-image:url(")) {
             echo 'finded image in style tag ' . $d->style . PHP_EOL;
-            $src = explode("'", $d->style)[1];
-            $newsrc = saveAsset($src);
+            
+            
+preg_match("/\b((https?):\/\/)?([a-z0-9-.]*)\.([a-z]{2,3})([-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$])/i", $d->style, $urls);
+$src = $urls[0];
+$newsrc = saveAsset($src);
             echo $newsrc . PHP_EOL;
             $d->style = "background-image:url('" . $newsrc . "')";
     
@@ -160,6 +168,9 @@ function processPageContent(simple_html_dom $dom): simple_html_dom
     }
     foreach ($dom->find('a') as $link) {
         $internalLinks[] = $link->href;
+    }
+    foreach ($dom->find('style') as $css) {
+        $css->innertext = processCssImgs($css->innertext);
     }
     return $dom;
 }
