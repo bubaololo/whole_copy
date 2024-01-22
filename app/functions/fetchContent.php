@@ -30,11 +30,11 @@ function saveImg($src)
 function getContentNode(string $html, string $node): simple_html_dom | null
 {
     $initialHtml = str_get_html($html);
-    $content = $initialHtml->find($node);
+    $content = $initialHtml->find($node)[0];
     if ($content) {
         $contentStr = $content->save();
-        $rawcontent =  str_get_html($contentStr);
-        return  str_get_html($rawcontent);
+        return  str_get_html($contentStr);
+        
     } else {
         return null;
     }
@@ -158,7 +158,7 @@ function processPageContent(simple_html_dom $dom): simple_html_dom
     }
     foreach ($dom->find('div') as $d) {
 
-        if (str_contains($d->style, "background-image:url(")) {
+        if (str_contains($d->style, "background-image")) {
             echo 'finded image in style tag ' . $d->style . PHP_EOL;
             // preg_match("/\b((https?):\/\/)?([a-z0-9-.]*)\.([a-z]{2,3})([-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$])/i", $d->style, $urls);
             // preg_replace_callback("/\b((https?):\/\/)?([a-z0-9-.]*)\.([a-z]{2,3})([-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$])/i", 'saveImgFromCss', $d->style);
