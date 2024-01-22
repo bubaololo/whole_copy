@@ -9,8 +9,8 @@ function saveImg($src)
     if (str_contains($filename, '%')) {
         $filename = str_replace('%', '_', $filename);
     }
-    
-    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . "assets" .DIRECTORY_SEPARATOR .$filename;
+
+    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . "assets" . DIRECTORY_SEPARATOR . $filename;
     $urlPath = "/assets/$filename";
     echo $urlPath . PHP_EOL;
     $options = array(
@@ -66,7 +66,7 @@ function saveAsset($src)
         $filename = str_replace('%', '_', $filename);
     }
 
-    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . 'assets'.DIRECTORY_SEPARATOR . $filename;
+    $realpath = getFilesPath('ready') . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $filename;
     $urlPath = "/assets/$filename";
     echo $urlPath . PHP_EOL;
 
@@ -106,13 +106,13 @@ function processCssImgs($cssContent)
 function normalizeSrcUrl(string $src): string
 {
 
-    
+
     if ($src == "") {
         exit;
     }
     if (str_starts_with($src, '//')) {
 
-       $src =  str_replace('//','https://', $src);
+        $src =  str_replace('//', 'https://', $src);
     }
     if (str_starts_with($src, '/')) {
 
@@ -125,45 +125,40 @@ function normalizeSrcUrl(string $src): string
 function processPageContent(simple_html_dom $dom): simple_html_dom
 {
     // universal assets collector
-    foreach ($dom->find('*') as $e) {
+    // foreach ($dom->find('*') as $e) {
 
-        if(isset($e->src)) {
-            $src = normalizeSrcUrl($e->src);
+    //     if (isset($e->src)) {
+    //         $src = normalizeSrcUrl($e->src);
 
-            if ($e->srcset) {
-                $e->removeAttribute('srcset');
-            }
+    //         if ($e->srcset) {
+    //             $e->removeAttribute('srcset');
+    //         }
 
-            $newsrc = saveAsset($src);
-            $e->src = $newsrc;
-        }
-    
-    }
-    foreach ($dom->find('link') as $link) {
+    //         $newsrc = saveAsset($src);
+    //         $e->src = $newsrc;
+    //     }
+    // }
+    // foreach ($dom->find('link') as $link) {
 
-        if(isset($link->href)) {
-            $src = normalizeSrcUrl($link->href);
+    //     if (isset($link->href)) {
+    //         $src = normalizeSrcUrl($link->href);
 
-            $newsrc = saveAsset($src);
-            $link->href = $newsrc;
-        }
-    
-    }
-    foreach ($dom->find('source') as $s) {
-        $s->outertext = '';
-    }
+    //         $newsrc = saveAsset($src);
+    //         $link->href = $newsrc;
+    //     }
+    // }
+    // foreach ($dom->find('source') as $s) {
+    //     $s->outertext = '';
+    // }
     foreach ($dom->find('div') as $d) {
 
         if (str_contains($d->style, "background-image:url(")) {
             echo 'finded image in style tag ' . $d->style . PHP_EOL;
-            
-            
-preg_match("/\b((https?):\/\/)?([a-z0-9-.]*)\.([a-z]{2,3})([-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$])/i", $d->style, $urls);
-$src = $urls[0];
-$newsrc = saveAsset($src);
+            preg_match("/\b((https?):\/\/)?([a-z0-9-.]*)\.([a-z]{2,3})([-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$])/i", $d->style, $urls);
+            $src = $urls[0];
+            $newsrc = saveAsset($src);
             echo $newsrc . PHP_EOL;
             $d->style = "background-image:url('" . $newsrc . "')";
-    
         }
     }
     foreach ($dom->find('a') as $link) {

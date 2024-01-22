@@ -11,7 +11,7 @@ $fullPath = getFilesPath('local') . DIRECTORY_SEPARATOR . 'index.html';
 $rawHtml = file_get_contents($fullPath);
 // $rawHtml = html_entity_decode($rawHtml);
 // file_put_contents('test.html', $rawHtml);
-
+$rawHtml = str_replace('&quot;', "'", $rawHtml);
 $page = getFullPage($rawHtml);
 
 foreach($page->find('title') as $e) {
