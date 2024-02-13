@@ -256,11 +256,12 @@ $urls = [
 
 
 
-$path = '';
 
-echo 'begin process ' . $path . PHP_EOL;
+
 
 foreach ($urls as $url) {
+    echo 'begin process ' . $url . PHP_EOL;
+    
     $url = str_replace('/', DIRECTORY_SEPARATOR, $url);
 
     // $fullPath = DOMAIN . $path;
@@ -272,12 +273,12 @@ foreach ($urls as $url) {
     $page = getFullPage($rawHtml);
 
     foreach ($page->find('title') as $e) {
-        $titles[$path] = $e->innertext;
+        $titles[$url] = $e->innertext;
         echo $e->innertext . PHP_EOL;
     }
 
     foreach ($page->find('meta[name=description]') as $e) {
-        $descriptions[$path] = $e->content;
+        $descriptions[$url] = $e->content;
         echo $e->content . PHP_EOL;
     }
 
