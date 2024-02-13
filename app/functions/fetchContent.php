@@ -55,6 +55,7 @@ function removeParams(string $str): string
         $str = preg_replace("/\?.*/", "", $str);
         
     }
+    $str = str_replace("\u002F",'/', $str);
     $str = str_replace("'",'', $str);
     return $str;
 }
@@ -107,6 +108,10 @@ function processCssImgs($cssContent)
     return preg_replace_callback("/(?<=url\()[^)]*/", 'saveImgFromCss', $cssContent);
 }
 
+function processJsImgs($jsContent)
+{
+    return preg_replace_callback('/(?<=src: ")[^"]*/', 'saveImgFromCss', $jsContent);
+}
 
 
 function normalizeSrcUrl(string $src): string

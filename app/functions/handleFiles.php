@@ -5,6 +5,7 @@ function getAllLocalPages()
 {
 
 }
+
 function getHttpContent(string $url, int $maxRetries = 3)
 {
     $options = array(
