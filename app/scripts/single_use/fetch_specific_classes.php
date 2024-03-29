@@ -1,0 +1,308 @@
+<?php
+
+require_once '../../../bootstrap.php';
+
+
+$urls = [
+    "/1-for-1million-tournament",
+    "/100000-guaranteed-welcome-tournament",
+    "/poker-promotions/welcome-match-bonus",
+    "/cookie-policy",
+    "/privacy-policy",
+    "/responsible-gaming",
+    "/customer-support-and-complaints",
+    "/customer-acceptance-policy",
+    "/kyc-policy",
+    "/feedback-terms-and-conditions",
+    "/terms-and-conditions",
+    "/influencer-launch-event",
+    "/how-to-play",
+    "/how-to-play/texas-hold-em-overview",
+    "/how-to-play/short-deck-overview",
+    "/how-to-play/how-do-poker-tournaments-work",
+    "/poker-promotions",
+    "/how-to-play/poker-glossary",
+    "/poker-table-rake",
+    "/wpt-summer-festival",
+    "/poker-tournaments",
+    "/summer-festival-enhanced-first-deposit-offer",
+    "/wpt-world-championship-satellite",
+    "/1-1m-new-schedule",
+    "/flip-your-way-to-the-wpt-world-championship-in-las-vegas",
+    "/poker-tournaments/your-name-deepstack-tournament",
+    "/monthly-leaderboard",
+    "/week-1-leaderboard",
+    "/week-2-leaderboard",
+    "/wpt-world-championship-first-deposit-promo",
+    "/week-3-leaderboard",
+    "/week-4-leaderboard",
+    "/casino-promo-slide/casino-promo-demo",
+    "/poker-promotions/invite-a-friend",
+    "/100-hands-to-vegas",
+    "/week-1-100-hands-to-vegas",
+    "/week-2-100-hands-to-vegas",
+    "/blog/five-free-ways-to-boost-your-online-poker-win-rate-part-1",
+    "/blog/five-free-ways-to-boost-your-online-poker-win-rate-part-2",
+    "/blog/what-separates-good-poker-players-from-the-best-part-1",
+    "/what-separates-good-poker-players-from-the-best-part-2",
+    "/blog/what-are-the-main-types-of-poker-players-part-1",
+    "/blog/what-are-the-main-types-of-poker-players-part-2",
+    "/week-3-100-hands-to-vegas",
+    "/week-4-100-hands-to-vegas",
+    "/blog/wpt-world-championship-qualifier-run-through",
+    "/bonus-policy",
+    "/week-5-100-hands-to-vegas",
+    "/win-prizes-with-the-12-days-of-xmas-challenge",
+    "/blog/3-step-warm-up-routine-to-improve-your-poker-results",
+    "/blog/how-to-play-omaha-and-pot-limit-omaha",
+    "/blog/how-to-calculate-pot-odds",
+    "/blog/wpt-global-welcomes-the-poker-world-to-las-vegas",
+    "/blog/big-wpt-global-field-in-day-1b-of-wpt-world-championship",
+    "/blog/successful-day-1b-for-wpt-global-qualifiers-at-wpt-world-championship",
+    "/blog/12-days-of-xmas-winners",
+    "/wpt-global-winter-festival",
+    "/blog/aiming-for-a-wpt-world-championship-cash",
+    "/blog/persigner-enjoying-her-wpt-world-championship-experience-thanks-to-wpt-global",
+    "/blog/persinger-kehoe-deep-in-the-money-in-wpt-world-championship",
+    "/blog/from-freeroll-to-six-figures-persinger-is-story-of-wpt-world-championship",
+    "/blog/kehoe-turns-550-wpt-global-satellite-into-269900-wpt-world-championship-cash",
+    "/blog/tips-to-help-you-break-out-of-micro-stakes",
+    "/blog/what-are-blockers-in-poker-and-how-do-they-work",
+    "/blog/how-to-play-loose-aggressive-poker-as-a-beginner",
+    "/blog/6-max-poker-tournament-and-cash-game-tips-wpt-global",
+    "/blog/top-poker-mistakes-to-avoid",
+    "/blog/the-best-times-to-bluff-when-playing-poker",
+    "/blog/how-to-play-with-an-ace-in-your-hand-in-poker",
+    "/blog/why-you-should-have-a-math-approach-to-poker",
+    "/blog/cash-in-big-with-wpt-global-passport-qualifiers",
+    "/blog/what-are-implied-odds-and-how-do-they-work-in-poker",
+    "/blog/top-10-poker-movies-every-player-must-watch-wpt-global",
+    "/action-poker-tour-events-wpt-global",
+    "/win-your-way-to-the-festival-with-our-poker-satellites-events",
+    "/weekly-main-mtt-leaderboard",
+    "/weekly-high-roller-leaderboard",
+    "/join-rampage-on-wpt-global",
+    "/weekly-main-mtt-leaderboard-week-2",
+    "/weekly-high-roller-leaderboard-week-2",
+    "/wptg-prime-passport-leaderboard",
+    "/weekly-main-mtt-leaderboard-week-3",
+    "/weekly-high-roller-leaderboard-week-3",
+    "/live-poker-tournament-in-malta",
+    "/weekly-main-mtt-leaderboard-week-4",
+    "/weekly-high-roller-leaderboard-week-4",
+    "/weekly-high-roller-leaderboard-week-5",
+    "/weekly-main-mtt-leaderboard-week-5",
+    "/how-to-play/pot-limit-omaha",
+    "/plo-cash-leaderboard",
+    "/weekly-main-mtt-leaderboard-week-6",
+    "/weekly-high-roller-leaderboard-week-6",
+    "/become-the-first-wpt-prime-online-champion",
+    "/weekly-main-mtt-leaderboard-week-7",
+    "/weekly-high-roller-leaderboard-week-7",
+    "/rabbit-hunt",
+    "/reveal-hands",
+    "/time-extension",
+    "/insurance",
+    "/hole-card-betting",
+    "/poker-promotions/2023-wpt-world-championship",
+    "/weekly-main-mtt-leaderboard-week-8",
+    "/weekly-high-roller-leaderboard-week-8",
+    "/weekly-main-mtt-leaderboard-week-9",
+    "/weekly-high-roller-leaderboard-week-9",
+    "/weekly-main-mtt-leaderboard-week-10",
+    "/weekly-high-roller-leaderboard-week-10",
+    "/weekly-main-mtt-leaderboard-week-11",
+    "/weekly-high-roller-leaderboard-week-11",
+    "/weekly-main-mtt-leaderboard-week-12",
+    "/weekly-high-roller-leaderboard-week-12",
+    "/wpt-korea-packages-tc",
+    "/weekly-main-mtt-leaderboard-week-13",
+    "/weekly-high-roller-leaderboard-week-13",
+    "/wpt-jackpots",
+    "/weekly-main-mtt-leaderboard-week-14",
+    "/weekly-high-roller-leaderboard-week-14",
+    "/weekly-main-mtt-leaderboard-week-15",
+    "/weekly-high-roller-leaderboard-week-15",
+    "/weekly-main-mtt-leaderboard-week-16",
+    "/weekly-main-mtt-leaderboard-week-17",
+    "/weekly-main-mtt-leaderboard-week-18",
+    "/weekly-high-roller-leaderboard-week-16",
+    "/weekly-high-roller-leaderboard-week-17",
+    "/weekly-high-roller-leaderboard-week-18",
+    "/global-spins",
+    "/christmas-reload-thank-you",
+    "/rewarding-integrity-in-poker",
+    "/wpt-global-squad",
+    "/great-wpt-giveaway-ii",
+    "/invite-a-friend",
+    "/wpt-prime-passport-qualifiers",
+    "/your-name-deepstack-tournament",
+    "/sunday-slam",
+    "/lets-bump-up-those-tournament-guarantees",
+    "/win-25000-and-freeroll-entry-in-the-wpt-global-kings-of-cash",
+    "/summer-slot-fever-is-your-blazing-hot-path-to-free-spins",
+    "/cash-prizes-all-day-with-drops-wins",
+    "/earn-up-to-400-free-spins-with-your-first-deposit",
+    "/win-a-stake-in-hustler-casino-live-game",
+    "/wpt-global-fall-festival",
+    "/check-out-all-the-ways-to-win-a-wpt-world-championship-passport-en",
+    "/wpt-global-winter-classic-playground",
+    "/canadian-football-legends",
+    "/welcome-package-first-deposit-match",
+    "/set-sail-with-wpt-voyage",
+    "/table-starters",
+    "/cash-in-during-our-winter-festival",
+    "/player-of-the-year",
+    "/blog/live-poker-tournament-in-malta-en",
+    "/blog/what-separates-good-poker-players-from-the-best-part-2",
+    "/blog/join-rampage-on-wpt-global",
+    "/blog/how-to-correctly-fold-in-poker-strategy-101",
+    "/blog/how-to-learn-poker-from-scratch",
+    "/blog/must-know-variations-of-poker",
+    "/blog/must-know-tips-for-online-poker",
+    "/blog/unwritten-rules-of-poker",
+    "/blog/live-poker-vs-online-poker-whats-the-difference-between-the-two",
+    "/blog/yifors-wins-wpt500-spring-festival-on-wpt-global",
+    "/blog/wptglobal-goes-onlive-in-mexico-city-with-world-poker-tour",
+    "/blog/2-more-from-spring-festival-earn-trips-to-las-vegas",
+    "/blog/next-gen-poker-joins-forces-with-wpt-global",
+    "/blog/100000-jackpot-goes-to-triple-crown-winner",
+    "/blog/this-weeks-king-of-cash-winners",
+    "/blog/five-things-to-consider-before-becoming-a-professional-poker-player",
+    "/blog/week2-kings-of-cash-winners",
+    "/blog/five-strategic-tips-for-poker-players",
+    "/blog/kings-of-cash-week-3-winners",
+    "/blog/week-4-kings-of-cash-winners",
+    "/blog/how-to-play-gutshots-in-poker",
+    "/blog/10-quick-poker-tips-to-help-your-game-in-10-minutes",
+    "/blog/kings-of-cash-week5-winners",
+    "/blog/week6-winners-in-kings-of-cash",
+    "/blog/poker-betting-rules-how-to-bet-in-poker",
+    "/blog/check-out-week-7-kings-of-cash-winners",
+    "/blog/week-1-discord-tournament-results",
+    "/blog/mistakes-to-avoid-when-playing-pocket-aces",
+    "/blog/week-8-brings-more-kings-of-cash",
+    "/blog/discord-tourney-week-2-winners",
+    "/blog/discord-tourney-winners-for-week-3",
+    "/blog/kings-of-cash-week-9-winners",
+    "/blog/discord-tourney-winner-going-to-las-vegas",
+    "/blog/week10-kings-of-cash-winners",
+    "/blog/check-out-all-the-ways-to-win-a-wpt-world-championship-passport",
+    "/blog/week1-september-discord-tourney-results",
+    "/poker-promotions/kings-of-cash-winners-for-week11",
+    "/blog/ways-to-succeed-at-playing-pocket-jacks",
+    "/septembers-discord-leaderboard-and-tourney-winners",
+    "/our-kings-of-cash-week-12-winners",
+    "/blog/close-battle-at-top-of-discord-leaderboard",
+    "/blog/an-overview-of-range-balancing-for-new-players",
+    "/blog/lucky-week13-kings-of-cash-winners",
+    "/blog/phil-ivey-headlines-wpt-japan-main-event",
+    "/blog/discord-tourney-champion-wins-wpt-passport-to-las-vegas",
+    "/blog/more-winners-in-kings-of-cash",
+    "/poker-tournaments/starting-the-october-discord-leaderboard",
+    "/poker-promotions/kings-of-cash-winners-for-week-15",
+    "/poker-tournaments/2-weeks-down-in-october-discord-leaderboard-race",
+    "/blog/new-kings-of-cash-winners",
+    "/blog/extra-points-this-weekend-in-discord-tournament",
+    "/poker-promotions/kings-of-cash-winners-for-week-of-oct-8",
+    "/poker-promotions/discord-winner-earns-wpt-championship-entry",
+    "/blog/most-poker-players-need-to-3-bet-more-often",
+    "/blog/mokri-wins-fall-festival-main-event",
+    "/blog/winning-poker-plays-when-out-of-position",
+    "/poker-promotions/final-chance-at-discord-tournament-leaderboard",
+    "/poker-promotions/kings-of-cash-winners-for-week-of-oct-22",
+    "/blog/are-cash-games-or-tournaments-best-for-your-poker-game",
+    "/poker-promotions/discord-tourney-gives-out-wpt-entry-next-sunday",
+    "/poker-promotions/our-latest-kings-of-cash-winners",
+    "/blog/adjusting-your-poker-game-when-short-handed",
+    "/poker-promotions/discord-winner-is-headed-to-las-vegas",
+    "/poker-tournaments/rampage-kogay-big-winners-at-playgrounds-wpt-global-october-millions",
+    "/poker-promotions/kings-of-cash-for-week-of-nov-5",
+    "/poker-promotions/kings-of-cash-winners-from-week-of-oct-15",
+    "/blog/xuan-lius-play-poker-across-canada-adventure",
+    "/discord-tourney-sending-winner-on-wpt-voyage",
+    "/poker-promotions/kings-of-cash-winners-from-week-of-nov-12",
+    "/poker-promotions/kings-of-cash-for-week-of-nov-19",
+    "/poker-tournaments/discord-tourney-results-from-nov-26",
+    "/poker-promotions/kings-of-cash-for-week-of-nov-26",
+    "/poker-promotions/discord-tourney-results-from-dec-3",
+    "/poker-promotions/hyper1-wins-wpt-voyage-package-in-discord-tourney",
+    "/poker-tournaments/aido-bags-big-in-day1-wpt-world-championship",
+    "/poker-tournaments/kolev-highlights-group-advancing-from-day1b-wpt-world-championship",
+    "/blog/from-free-55-ticket-to-wpt-world-championship-for-racinskas",
+    "/blog/hopkins-spins-satellite-win-into-wpt-world-championship-run",
+    "/poker-tournaments/arends-doubles-on-bubble-to-cash-in-wpt-world-championship",
+    "/poker-promotions/campero-turns-wpt-global-freeroll-into-wpt-world-championship-cash",
+    "/blog/jiang-plays-wpt-high-stakes-cash-game-and-cashes-in-world-championship",
+    "/blog/taylor-rides-20-satellite-to-las-vegas-and-wpt-world-championship-cash",
+    "/poker-promotions/kings-of-cash-for-week-of-dec3",
+    "/poker-tournaments/campero-leads-wpt-world-championship-with-100-left",
+    "/poker-tournaments/guillen-campero-make-for-winning-mexico-poker-combination",
+    "/blog/blouet-blasts-up-wpt-world-championship-counts",
+    "/poker-promotions/kings-of-cash-for-week-of-dec10",
+    "/poker-promotions/kings-of-cash-for-week-of-dec17",
+    "/poker-promotions/final-kings-of-cash-winners-for-2023",
+    "/poker-promotions/newlifer-scores-discord-victory",
+    "/about-us",
+    "/blog",
+    "/casino",
+    "/faq",
+    "/feedback",
+    "/poker-download",
+    "/poker-flips",
+    "/poker-master",
+    "/blog/listing",
+];
+
+
+
+foreach ($urls as $url) {
+    echo 'begin process ' . $url . PHP_EOL;
+    
+    $url = str_replace('/', DIRECTORY_SEPARATOR, $url);
+
+    // $fullPath = DOMAIN . $path;
+    $fullPath = getFilesPath('local') . $url . DIRECTORY_SEPARATOR . 'index.html';
+    $rawHtml = file_get_contents($fullPath);
+    // $rawHtml = html_entity_decode($rawHtml);
+    // file_put_contents('test.html', $rawHtml);
+    $rawHtml = str_replace('&quot;', "'", $rawHtml);
+    $page = getFullPage($rawHtml);
+
+//    foreach ($page->find('title') as $e) {
+//        $titles[$url] = $e->innertext;
+//        echo $e->innertext . PHP_EOL;
+//    }
+//
+//    foreach ($page->find('meta[name=description]') as $e) {
+//        $descriptions[$url] = $e->content;
+//        echo $e->content . PHP_EOL;
+//    }
+
+    $contentNode = $page->find('#app',0);
+    $classList = $contentNode->class;
+    $pattern = '/\bpage-\w+\b/';
+
+// Поиск совпадений с регулярным выражением в строке с классами
+    preg_match($pattern, $classList, $matches);
+
+// $matches[0] содержит найденный класс, начинающийся с "page-"
+    if (!empty($matches[0])) {
+        $page_class = $matches[0];
+        $classes[$url] = $page_class;
+    } else {
+        echo "Класс, начинающийся с 'page-', не найден.";
+    }
+    
+    
+    
+    
+
+
+
+    
+}
+
+//file_put_contents(getFilesPath() . DIRECTORY_SEPARATOR . 'titles.json', json_encode($titles));
+//file_put_contents(getFilesPath() . DIRECTORY_SEPARATOR . 'descriptions.json', json_encode($descriptions));
+file_put_contents(getFilesPath() . DIRECTORY_SEPARATOR . 'classes.json', json_encode($classes));

@@ -19,7 +19,6 @@ $readySiteFiles = $parentDir . DIRECTORY_SEPARATOR . READY_FILES_DIR;
 
 
 $paths = [
-    "/"
 ];
 $paths = array_unique($paths);
 $internalLinks = [];
