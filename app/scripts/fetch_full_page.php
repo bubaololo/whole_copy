@@ -28,27 +28,6 @@ foreach($page->find('meta[name=description]') as $e) {
 $readyPageContent =  processPageContent($page);
 
 
-// foreach ($page->find('img') as $e) {
-//     $src = $e->src;
-//     echo 'finded img ' . $src . PHP_EOL;
-//     if ($src == "") {
-//         break;
-//     }
-//     if (str_starts_with($src, '//')) {
-
-//         $src = str_replace('//', 'https://', $src);
-//     }
-//     if (str_starts_with($src, '/')) {
-
-//         $src = DOMAIN . $src;
-//     }
-//     if ($e->srcset) {
-//         $e->removeAttribute('srcset');
-//     }
-//     $newsrc = saveImg($src);
-//     $e->src = $newsrc;
-
-// }
 
 
 
