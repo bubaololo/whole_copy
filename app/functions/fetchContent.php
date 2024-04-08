@@ -96,7 +96,7 @@ function saveImgFromCss($src)
 
     if (str_starts_with($src, '/')) {
 
-        $src = DOMAIN . '/' . $src;
+        $src = DOMAIN  . $src;
     }
     
      saveAsset($src);

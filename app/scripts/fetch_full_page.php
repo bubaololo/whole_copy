@@ -31,5 +31,5 @@ $readyPageContent =  processPageContent($page);
 
 
 
-$page->save('temp.html');
-
+$readyPageContent->save('temp.html');
+echo PHP_EOL.'content fetched succesfully!';

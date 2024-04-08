@@ -11,9 +11,14 @@ function getHttpContent(string $url, int $maxRetries = 3)
     $options = array(
         'http' => array(
             'method' => "GET",
-            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n",
+            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n"
+            ."sec-ch-ua: ^\^'Google Chrome^\^';v=^\^'123^\^', ^\^'Not:A-Brand^\^';v=^\^'8^\^', ^\^'Chromium^\^';v=^\^'123^\^'^"
+            ."Referer: https://kkpoker.co/"
+            . "sec-ch-ua-mobile: ?0"
+            ."sec-ch-ua-platform: ^\^'Windows^\^'^",
         ),
     );
+
     $context = stream_context_create($options);
     
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -27,6 +32,7 @@ function getHttpContent(string $url, int $maxRetries = 3)
     $retryCount = 0;
     do {
         try {
+            echo 'try to fetch url: '.$url.PHP_EOL;
             $raw = @file_get_contents($url, false, $context);
             if ($raw !== false) {
                 break; // Break the loop if content is fetched successfully
@@ -65,6 +71,7 @@ function getPageDom(string $url, int $maxRetries = 3): simple_html_dom
     $retryCount = 0;
     do {
         try {
+            echo 'try to fetch url: '.$url;
             $phpdom = @file_get_html($url);
             if ($phpdom !== false) {
                 break; // Break the loop if content is fetched successfully
